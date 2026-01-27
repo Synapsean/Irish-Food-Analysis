@@ -38,7 +38,7 @@ I applied **TF-IDF Vectorization** and **K-Means Clustering** (k=5) to the raw i
 
 ### 2. The Cleaner (`nlp_lab.py` logic)
 * **Regex Tokenization:** Custom pattern `r',\s*(?![^()]*\))'` handles nested ingredient lists.
-* **Normalization:** Maps synonyms (e.g., *"Flavourings"* -> *"Flavouring"*) and removes German/non-English imports.
+* **Normalisation:** Maps synonyms (e.g., *"Flavourings"* -> *"Flavouring"*) and removes German/non-English imports.
 
 ### 3. The Analyser (`analyse_irish_ingredients.py`)
 * Calculates frequency distributions of ingredients.
