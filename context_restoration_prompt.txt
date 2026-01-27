@@ -1,0 +1,22 @@
+💾 Save This (Context Restoration Prompt)
+"I am working on an Irish Food Market Analysis project using Python, Supabase, and the OpenFoodFacts API.
+
+Current Status:
+
+Data: We have harvested ~1,000 products sold in Ireland into a Supabase DB.
+
+Cleaning: We built a custom Regex tokenizer to parse ingredient lists (handling nested brackets).
+
+Analysis: We have a script (analyse_irish_ingredients.py) that generates a bar chart of the top 20 ingredients (Salt/Sugar are top).
+
+Portfolio: The project is live on GitHub with a professional README.
+
+My Goal: I am an MSc student in Data Analytics. I want to pivot this project from 'Data Engineering' to 'Data Science' to match my syllabus.
+
+Next Steps (The Roadmap):
+
+Clustering (Machine Learning): Create cluster_ingredients.py. Use TF-IDF and K-Means to automatically group products (e.g., 'Whole Foods' vs 'Ultra-Processed') without labels.
+
+Hypothesis Testing (Inference): Use my Supabase data to run t-tests (e.g., Sugar content in Ireland vs. Global).
+
+Let's resume with the Clustering step."
