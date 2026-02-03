@@ -1,54 +1,185 @@
-# 🇮🇪 Irish Food Market Analysis Pipeline
+# Irish Food Market Analysis
 
-A full-stack Data Science pipeline that harvests, cleans, and analyses ingredient data from the OpenFoodFacts API, specifically targeting the Irish market.
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![Supabase](https://img.shields.io/badge/Database-Supabase-green.svg)](https://supabase.com)
+[![scikit-learn](https://img.shields.io/badge/ML-scikit--learn-orange.svg)](https://scikit-learn.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![Top Ingredients Graph](irish_food_ingredients.png)
-*Fig 1: Analysis of the top 20 ingredients found in 1,000+ Irish food products.*
+A full-stack **Data Science pipeline** that harvests, cleans, and analyzes ingredient data from the OpenFoodFacts API, specifically targeting the **Irish food market**. The project applies unsupervised machine learning to automatically detect ultra-processed foods.
+
+![Top Ingredients](outputs/irish_food_ingredients.png)
+*Analysis of the top 20 ingredients found in 1,000+ Irish food products.*
+
+---
 
 ## 🎯 Project Overview
-The goal of this project was to determine the "standard composition" of processed food sold in Ireland and to detect "Ultra-Processed" products automatically using Unsupervised Machine Learning.
 
-## 🧠 Machine Learning: Unsupervised Clustering
-I applied **TF-IDF Vectorization** and **K-Means Clustering** (k=5) to the raw ingredient text to see if the model could naturally segment the market without human labels.
+**Business Question:** *What is the "standard composition" of processed food sold in Ireland, and can we automatically detect ultra-processed products using Machine Learning?*
 
-**The Model successfully identified 5 distinct product categories:**
+### Key Findings
+- **Salt and Sugar** appear in **>45%** of all Irish food products
+- K-Means clustering successfully identified **5 distinct product segments** without human labels
+- AI-generated clusters strongly correlate with official NOVA processing scores (validated)
 
-* **Cluster 0 (The "Bio-Active" Group):** Defined by keywords like *cultures, lactobacillus, yogurt*. The model separated "living" food from processed food.
-* **Cluster 1 (Savory Ultra-Processed):** The largest cluster, containing chips, sauces, and processed meats. Defined by *oil, powder, extract, flavouring*.
-* **Cluster 2 (Sweet Confectionery):** 90% Ultra-Processed. Defined by *cocoa, emulsifier, lecithin, palm oil*.
-* **Cluster 3 (Vitamin-Fortified Cereals):** Distinguished by voluntary fortifications like *B12, Folic Acid, Riboflavin*.
-* **Cluster 4 (Legally Fortified Bread):** Distinguished by mandatory additives in Irish flour: *Calcium Carbonate, Iron, Niacin*.
+---
 
-![Cluster Validation](nova_validation.png)
-*Fig 2: Validation Heatmap. The AI-generated clusters (rows) strongly correlate with official NOVA processing groups (columns), proving the model correctly identified ultra-processed foods (NOVA 4) in Cluster 1 and 2.*
+## 🧠 Machine Learning Results
 
-## 🛠 Tech Stack
-* **Language:** Python 3.9
-* **Database:** Supabase (PostgreSQL)
-* **Machine Learning:** Scikit-Learn (K-Means, TF-IDF, PCA)
-* **ETL & NLP:** Pandas, Regex Custom Tokenizer
-* **Visualisation:** Seaborn, Matplotlib
+Applied **TF-IDF Vectorization** + **K-Means Clustering** (k=5) to raw ingredient text:
 
-## ⚙️ Pipeline Architecture
+| Cluster | Profile | Defining Keywords | NOVA Correlation |
+|---------|---------|-------------------|------------------|
+| 0 | Bio-Active Foods | *cultures, lactobacillus, yogurt* | NOVA 1-2 |
+| 1 | Savory Ultra-Processed | *oil, powder, extract, flavouring* | NOVA 4 |
+| 2 | Sweet Confectionery | *cocoa, emulsifier, lecithin, palm oil* | NOVA 4 |
+| 3 | Vitamin-Fortified Cereals | *B12, folic acid, riboflavin* | NOVA 3-4 |
+| 4 | Legally Fortified Bread | *calcium carbonate, iron, niacin* | NOVA 3 |
 
-### 1. The Harvester (`harvest_to_db.py`)
-* Iterates through 12 major food categories using API pagination.
-* Filters specifically for products sold in `Ireland` or `en:ie`.
-* Stores data in Supabase with upsert logic to prevent duplicates.
+![Cluster Validation](outputs/nova_validation.png)
+*Validation: AI clusters vs. official NOVA processing groups*
 
-### 2. The Cleaner (`nlp_lab.py` logic)
-* **Regex Tokenization:** Custom pattern `r',\s*(?![^()]*\))'` handles nested ingredient lists.
-* **Normalisation:** Maps synonyms (e.g., *"Flavourings"* -> *"Flavouring"*) and removes German/non-English imports.
+---
 
-### 3. The Analyser (`analyse_irish_ingredients.py`)
-* Calculates frequency distributions of ingredients.
-* Identifies the "Industrial Standard": Salt and Sugar appear in >45% of products.
+## 📁 Project Structure
 
-### 4. The Cluster Engine (`cluster_ingredients.py`)
-* Converts text to high-dimensional vectors.
-* Reduces dimensionality using PCA for visualisation.
-* Validates clusters against the **NOVA** processing score.
+```
+Food_data/
+├── src/                          # Core pipeline modules
+│   ├── __init__.py
+│   ├── harvester.py              # ETL: Fetch data from OpenFoodFacts API
+│   ├── tokenizer.py              # NLP: Regex-based ingredient parser
+│   ├── analyzer.py               # Stats: Frequency analysis & visualization
+│   └── clustering.py             # ML: TF-IDF + K-Means clustering
+│
+├── notebooks/                    # Exploratory analysis
+│   └── Food_market_analysis.ipynb
+│
+├── scripts/                      # Utility & exploration scripts
+│   ├── check_api.py              # Test API connectivity
+│   ├── search_api.py             # Search products by name
+│   └── clean_countries.py        # Data cleaning utilities
+│
+├── outputs/                      # Generated visualizations
+│   ├── irish_food_ingredients.png
+│   ├── cluster_analysis.png
+│   └── nova_validation.png
+│
+├── .github/
+│   └── copilot-instructions.md   # AI agent context
+│
+├── requirements.txt              # Python dependencies
+├── .env                          # Credentials (not tracked)
+└── README.md
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|-------------|
+| **Language** | Python 3.9+ |
+| **Database** | Supabase (PostgreSQL) |
+| **ML/NLP** | scikit-learn (K-Means, TF-IDF, PCA) |
+| **Statistics** | Pingouin (t-tests, ANOVA) |
+| **Visualization** | Seaborn, Matplotlib |
+| **ETL** | Pandas, Requests |
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone & Setup Environment
+
+```bash
+git clone https://github.com/yourusername/Food_data.git
+cd Food_data
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 2. Configure Credentials
+
+Create a `.env` file in the project root:
+
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_anon_key
+```
+
+### 3. Run the Pipeline
+
+```bash
+# Harvest data from OpenFoodFacts API
+python src/harvester.py
+
+# Analyze ingredient frequencies
+python src/analyzer.py
+
+# Run ML clustering
+python src/clustering.py
+```
+
+---
+
+## 📊 Pipeline Architecture
+
+```mermaid
+graph LR
+    A[OpenFoodFacts API] -->|Harvest| B[Supabase DB]
+    B -->|Extract| C[Tokenizer]
+    C -->|Clean| D[TF-IDF Vectorizer]
+    D -->|Cluster| E[K-Means Model]
+    E -->|Validate| F[NOVA Scores]
+    F -->|Visualize| G[Reports & Plots]
+```
+
+### Stage Details
+
+1. **Harvester** - Iterates 12 food categories, filters for Ireland, respects API rate limits
+2. **Tokenizer** - Custom regex `r',\s*(?![^()]*\))'` handles nested ingredient lists
+3. **Analyzer** - Normalizes synonyms, calculates frequencies, generates visualizations
+4. **Clustering** - Converts text to vectors, reduces dimensions via PCA, validates against NOVA
+
+---
+
+## 🔬 Statistical Analysis
+
+The notebook includes hypothesis testing using Welch's t-test:
+
+- **Salt Content:** Soup vs. Crisps (significant difference, p < 0.05)
+- **Sugar Analysis:** Cluster-based comparison of mean sugar levels
+
+---
 
 ## 🔮 Future Roadmap
-* **Hypothesis Testing:** Conduct T-Tests to determine if "Vegan" labeled products have statistically higher sugar content than non-vegan equivalents.
-* **Predictive Modelling:** Train a Random Forest classifier to predict Nutri-Score grades based solely on ingredient vectors.
+
+- [ ] **Predictive Model:** Train Random Forest to predict Nutri-Score from ingredients
+- [ ] **Streamlit Dashboard:** Interactive web app for exploring clusters
+- [ ] **Time-Series:** Track ingredient trends over time
+- [ ] **Expand Markets:** Compare Ireland vs. UK vs. EU patterns
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+**Sean** - MSc Data Analytics Student
+
+*This project demonstrates end-to-end data science skills: ETL pipelines, NLP preprocessing, unsupervised ML, statistical inference, and data visualization.*
+
+---
+
+<p align="center">
+  <i>Built with ☕ and curiosity about what's really in our food.</i>
+</p>

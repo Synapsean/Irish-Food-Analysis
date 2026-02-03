@@ -23,7 +23,7 @@ def get_product_data(barcode):
             # The Gold Mine: The raw ingredient text
             print(f"\n[Raw Ingredients]:\n{product.get('ingredients_text', 'NO DATA')}")
             
-            # The Challenge: They often have a 'nova_group' already calculated (1-4).
+            # Often have a 'nova_group' already calculated (1-4).
             # Your job will be to see if you can REPLICATE or IMPROVE this logic.
             print(f"\n[Existing NOVA Score]: {product.get('nova_group', 'Not calculated')}")
             

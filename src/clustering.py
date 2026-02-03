@@ -41,7 +41,7 @@ X = vectorizer.fit_transform(df['ingredients_text'])
 print(f"Matrix Shape: {X.shape} (Products x Unique Ingredients)")
 
 # 3. CLUSTERING (K-MEANS)
-# We ask for 3 clusters. You can change this number later.
+# We ask for 5 clusters. You can change this number later.
 k = 5
 kmeans = KMeans(n_clusters=k, random_state=42)
 kmeans.fit(X)
@@ -50,7 +50,7 @@ kmeans.fit(X)
 df['cluster'] = kmeans.labels_
 
 # 4. EXPLAIN THE CLUSTERS
-# What defines each group? We look at the "Centroids" (the center of the cluster).
+# What defines each group? Look at the "Centroids" (the center of the cluster).
 print("\n--- CLUSTER INSIGHTS ---")
 terms = vectorizer.get_feature_names_out()
 order_centroids = kmeans.cluster_centers_.argsort()[:, ::-1]
@@ -65,7 +65,7 @@ for i in range(k):
     examples = df[df['cluster'] == i]['product_name'].sample(3).values
     print(f"Examples: {examples}")
 
-# 5. VISUALIZATION (PCA)
+# 5. VISUALISATION (PCA)
 # Squash the 1000 dimensions down to 2 so we can plot it
 pca = PCA(n_components=2)
 coords = pca.fit_transform(X.toarray())
@@ -79,7 +79,7 @@ sns.scatterplot(
     s=70,
     alpha=0.8
 )
-plt.title('Food Clusters: Visualizing Ingredient Similarity')
+plt.title('Food Clusters: Visualising Ingredient Similarity')
 plt.xlabel('Principal Component 1')
 plt.ylabel('Principal Component 2')
 plt.legend(title='Cluster ID')

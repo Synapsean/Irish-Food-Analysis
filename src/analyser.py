@@ -24,7 +24,7 @@ response = supabase.table("food_items") \
 products = response.data
 print(f"Analysing {len(products)} Irish Products...")
 
-# 2. The Tokenizer (Your Regex)
+# 2. The Tokenizer (Regex)
 # We handle "Commas inside brackets"
 pattern = r',\s*(?![^()]*\))'
 all_ingredients = []

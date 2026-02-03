@@ -39,7 +39,7 @@ def clean_country_list(raw_string):
 df['country_list'] = df['countries_sold'].apply(clean_country_list)
 
 # 4. Feature Engineering: "Is it sold in Ireland?"
-# We look for 'ireland' OR 'ie' in the list
+# Look for 'ireland' OR 'ie' in the list
 df['sold_in_ireland'] = df['country_list'].apply(lambda x: 'ireland' in x or 'ie' in x)
 
 # 5. Let's look at the results
