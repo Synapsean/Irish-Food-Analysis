@@ -60,6 +60,27 @@ st.markdown("""
         padding: 10px;
         border-radius: 8px;
     }
+    @keyframes skeleton-loading {
+        0% { background-color: #1a1a2e; }
+        50% { background-color: #16213e; }
+        100% { background-color: #1a1a2e; }
+    }
+    .skeleton {
+        animation: skeleton-loading 1.5s infinite;
+        border-radius: 8px;
+        height: 400px;
+        margin: 10px 0;
+    }
+    .footer-text {
+        font-size: 0.85rem;
+        color: #888;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .footer-text a {
+        color: #169B62;
+        text-decoration: none;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -168,9 +189,19 @@ def main():
     # Navigation
     page = st.sidebar.radio(
         "Navigate", 
-        ["📊 Cluster Explorer", "🍬 Nutrition Insights", "🧪 Ingredients", "📈 Data"],
+        ["📊 Cluster Explorer", "🍬 Nutrition Insights", "🧪 Ingredients", "📈 Data", "ℹ️ About"],
         label_visibility="collapsed"
     )
+    
+    # Sidebar Footer
+    st.sidebar.divider()
+    st.sidebar.markdown("""
+    <div class="footer-text">
+        Built by <b>Sean</b><br>
+        <a href="https://linkedin.com/in/YOUR-LINKEDIN" target="_blank">🔗 LinkedIn</a> • 
+        <a href="https://github.com/Synapsean" target="_blank">💻 GitHub</a>
+    </div>
+    """, unsafe_allow_html=True)
     
     # --- PAGE 1: CLUSTER EXPLORER ---
     if page == "📊 Cluster Explorer":
@@ -324,6 +355,91 @@ def main():
             "irish_food_data.csv", 
             "text/csv"
         )
+
+    # --- PAGE 5: ABOUT ---
+    elif page == "ℹ️ About":
+        st.markdown('<p class="main-header">ℹ️ About This Project</p>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("""
+            ### 🎯 The Mission
+            
+            This project answers a simple question: **What's really in Irish food?**
+            
+            Using data from 1,000+ products sold in Ireland, I built an end-to-end data science 
+            pipeline that harvests, cleans, and analyses ingredient data — then applies 
+            **unsupervised machine learning** to automatically detect patterns.
+            
+            ---
+            
+            ### 🧠 How It Works
+            
+            1. **Data Harvesting** — Products are fetched from the OpenFoodFacts API, filtered for Ireland
+            2. **NLP Preprocessing** — Custom regex tokenizer handles nested ingredient lists
+            3. **TF-IDF Vectorization** — Converts ingredient text into numerical features
+            4. **K-Means Clustering** — Groups similar products without human labels
+            5. **Validation** — Clusters are validated against official NOVA processing scores
+            
+            ---
+            
+            ### 🔬 Key Findings
+            
+            - **Salt & Sugar** appear in over 45% of all products
+            - The model identified **5 distinct market segments** automatically
+            - "Soup" category averages are skewed by concentrated stock cubes
+            - AI-generated clusters strongly correlate with NOVA ultra-processing scores
+            
+            ---
+            
+            ### 🛠️ Tech Stack
+            
+            `Python` `Pandas` `scikit-learn` `Streamlit` `Plotly` `Supabase` `PostgreSQL`
+            
+            """)
+        
+        with col2:
+            st.markdown("""
+            ### 👤 About Me
+            
+            **Sean**  
+            MSc Data Analytics Student
+            
+            I'm passionate about using data science 
+            to uncover hidden patterns in everyday life.
+            
+            This project demonstrates:
+            - ETL pipeline development
+            - NLP text preprocessing  
+            - Unsupervised ML (clustering)
+            - Statistical inference
+            - Interactive dashboards
+            
+            ---
+            
+            ### 📬 Get In Touch
+            
+            [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://linkedin.com/in/YOUR-LINKEDIN)
+            
+            [![GitHub](https://img.shields.io/badge/GitHub-Synapsean-black?style=flat&logo=github)](https://github.com/Synapsean)
+            
+            ---
+            
+            ### 📂 Source Code
+            
+            This project is open source!  
+            [View on GitHub →](https://github.com/Synapsean/Irish-Food-Analysis)
+            """)
+        
+        # Fun stats
+        st.divider()
+        st.subheader("📊 Dataset Stats")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Total Products", f"{len(df):,}")
+        c2.metric("Categories", df['category_searched'].nunique())
+        c3.metric("Unique Brands", df['brand'].nunique())
+        c4.metric("Data Source", "OpenFoodFacts")
 
 
 if __name__ == "__main__":
