@@ -420,7 +420,7 @@ def main():
             
             ### 📬 Get In Touch
             
-            [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://linkedin.com/in/YOUR-LINKEDIN)
+            [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/seán-quinlan-phd)
             
             [![GitHub](https://img.shields.io/badge/GitHub-Synapsean-black?style=flat&logo=github)](https://github.com/Synapsean)
             
