@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from tokenizer import (
     tokenize_ingredients,
-    normalize_ingredient,
+    normalise_ingredient,
     parse_ingredient_list,
     DEFAULT_REPLACEMENTS,
 )
@@ -69,40 +69,40 @@ class TestTokenizeIngredients:
 
 
 class TestNormalizeIngredient:
-    """Tests for the normalize_ingredient function."""
+    """Tests for the normalise_ingredient function."""
     
     def test_lowercase(self):
         """Should convert to lowercase."""
-        assert normalize_ingredient("WATER") == "water"
-        assert normalize_ingredient("Salt") == "salt"
+        assert normalise_ingredient("WATER") == "water"
+        assert normalise_ingredient("Salt") == "salt"
     
     def test_remove_periods(self):
         """Should remove trailing periods."""
-        assert normalize_ingredient("sugar.") == "sugar"
+        assert normalise_ingredient("sugar.") == "sugar"
     
     def test_synonym_replacement(self):
         """Should apply synonym mappings."""
-        assert normalize_ingredient("flavourings") == "flavouring"
-        assert normalize_ingredient("vegetable oils") == "vegetable oil"
-        assert normalize_ingredient("glucose syrup") == "sugar"
+        assert normalise_ingredient("flavourings") == "flavouring"
+        assert normalise_ingredient("vegetable oils") == "vegetable oil"
+        assert normalise_ingredient("glucose syrup") == "sugar"
     
     def test_skip_allergen_warnings(self):
         """Should return empty string for allergen warnings."""
-        assert normalize_ingredient("contains milk") == ""
-        assert normalize_ingredient("including wheat") == ""
-        assert normalize_ingredient("may contain nuts") == ""
-        assert normalize_ingredient("Allergen advice: contains gluten") == ""
+        assert normalise_ingredient("contains milk") == ""
+        assert normalise_ingredient("including wheat") == ""
+        assert normalise_ingredient("may contain nuts") == ""
+        assert normalise_ingredient("Allergen advice: contains gluten") == ""
     
     def test_skip_short_strings(self):
         """Should skip single-character results."""
-        assert normalize_ingredient("a") == ""
-        assert normalize_ingredient(".") == ""
+        assert normalise_ingredient("a") == ""
+        assert normalise_ingredient(".") == ""
     
     def test_custom_replacements(self):
         """Should accept custom replacement dictionary."""
         custom = {"h2o": "water", "nacl": "salt"}
-        assert normalize_ingredient("H2O", custom) == "water"
-        assert normalize_ingredient("NaCl", custom) == "salt"
+        assert normalise_ingredient("H2O", custom) == "water"
+        assert normalise_ingredient("NaCl", custom) == "salt"
 
 
 class TestParseIngredientList:
