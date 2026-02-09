@@ -12,6 +12,14 @@ This project harvests, cleans, and analyses **2,000+ Irish food products** from 
 
 ![Dashboard Screenshot](outputs/dashboard_preview.png)
 
+## ✨ Features
+
+- **🔍 Product Recommender**: TF-IDF ingredient similarity engine finds alternatives to any product
+- **🧪 UPF Filter**: Toggle between all products vs ultra-processed foods (NOVA 4)
+- **📊 Nutrient Analysis**: Interactive charts for salt, sugar, fat across categories
+- **🤖 ML Clustering**: K-Means segmentation reveals 5 ingredient-based market clusters
+- **📈 Statistical Testing**: Pingouin t-tests, ANOVA for hypothesis validation
+
 ## 📊 Key Insights
 
 | Finding | Evidence |
@@ -36,7 +44,8 @@ This project harvests, cleans, and analyses **2,000+ Irish food products** from 
 ├── src/                  # Core modules
 │   ├── harvester.py      # OpenFoodFacts API client
 │   ├── tokenizer.py      # Ingredient parsing (regex)
-│   └── clustering.py     # ML pipeline
+│   ├── clustering.py     # ML pipeline
+│   └── recommender.py    # TF-IDF similarity recommender
 ├── tests/                # Unit tests (pytest)
 ├── notebooks/            # EDA and hypothesis testing
 ├── app.py                # Streamlit dashboard
