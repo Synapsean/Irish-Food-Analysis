@@ -57,6 +57,29 @@ This project demonstrates full-stack data science and software engineering capab
 3. Create expert-curated validation set (50+ products with pharmacology-based health rankings)
 4. Refactor evaluation to use Precision@K, Recall@K, NDCG@K with non-circular ground truth
 
+### Performance Metrics (Post-Refactoring)
+
+Once semantic embeddings are implemented, the following validation metrics will be calculated:
+
+**Silhouette Score Comparison:**
+- Measures clustering quality (values from -1 to 1, higher is better)
+- Formula: `s(i) = (b(i) - a(i)) / max(a(i), b(i))`
+- Current (TF-IDF K-Means): ~0.42 (reported in insights)
+- Expected (SBERT K-Means): >0.55 (semantic clustering should outperform bag-of-words)
+- **Status**: Requires Sentence-Transformer implementation
+
+**Recommender System Metrics:**
+- Precision@3: What fraction of top-3 recommendations are truly healthier?
+- Recall@10: What fraction of all healthier alternatives were captured in top-10?
+- NDCG@K: Normalized Discounted Cumulative Gain (rewards ranking quality)
+- **Baseline**: Expert-curated gold standard (50 products with pharmacology-validated alternatives)
+- **Status**: Requires non-circular evaluation framework
+
+**Semantic Similarity Validation:**
+- Cosine similarity: "salt" vs "sodium chloride" (should be >0.8 with SBERT, ~0.0 with TF-IDF)
+- Demonstrate improved ingredient matching with embeddings
+- **Status**: Requires SBERT implementation
+
 This repository showcases software engineering and deployment skills. The ML sophistication is intentionally kept simple for demonstrative purposes and will be enhanced in future iterations.
 
 ---
