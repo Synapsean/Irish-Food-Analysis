@@ -28,6 +28,39 @@ This project harvests, cleans, and analyses **2,000+ Irish food products** from 
 | **5 Market Segments** | K-Means clustering revealed 5 distinct product clusters based on ingredient composition, not marketing labels |
 | **NOVA Validation** | Cluster analysis aligns with NOVA ultra-processing classification (Silhouette Score: 0.42) |
 
+## ⚠️ Technical Considerations
+
+**Note on Current Implementation:**
+
+This project demonstrates full-stack data science and software engineering capabilities. However, there are known technical limitations in the current NLP approach:
+
+**Semantic Similarity Limitation:**
+- Current implementation uses **TF-IDF** (bag-of-words) for ingredient similarity
+- Does not capture semantic relationships: "sodium chloride" ≠ "salt", "sugar" ≠ "glucose syrup"
+- Industry-standard approach would use **Sentence-BERT embeddings** or similar transformer models
+
+**Evaluation Methodology:**
+- Current evaluation uses category-based relevance (circular logic with the filtering mechanism)
+- Production system would require **expert-curated gold standard** validation set
+- Proper metrics would test actual health improvement, not just category matching
+
+**What This Project Demonstrates:**
+- ✅ Full-stack capability: API → Database → ML → Deployment
+- ✅ Clean code architecture with modular design and testing
+- ✅ CI/CD pipeline with automated testing and quality checks
+- ✅ Production deployment experience (live Streamlit app)
+- ✅ Data engineering: ETL pipelines, database design, API integration
+
+**Planned Improvements:**
+1. Replace TF-IDF with Sentence-Transformers for semantic ingredient matching
+2. Implement FAISS/ChromaDB vector database for scalable similarity search
+3. Create expert-curated validation set (50+ products with pharmacology-based health rankings)
+4. Refactor evaluation to use Precision@K, Recall@K, NDCG@K with non-circular ground truth
+
+This repository showcases software engineering and deployment skills. The ML sophistication is intentionally kept simple for demonstrative purposes and will be enhanced in future iterations.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Component | Technology |

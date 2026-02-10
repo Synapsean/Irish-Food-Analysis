@@ -1,36 +1,78 @@
 # Irish Food Market Analysis - AI Agent Instructions
 
 ## Project Overview
-Data pipeline analysing Irish food market from OpenFoodFacts API. Harvests data to Supabase, cleans ingredients with regex tokenization, performs statistical analysis and ML clustering.
+Modular data science project analysing 2000+ Irish food products from OpenFoodFacts. Features ingredient parsing, NOVA classification, TF-IDF recommender system, and interactive Streamlit dashboard.
 
 ## Architecture
-- **Harvester** (`harvest_to_db.py`): Fetches OpenFoodFacts data for 12 categories, filters for Ireland, upserts to Supabase
-- **Cleaner** (`nlp_lab.py`): Tokenizes ingredients using regex `r',\s*(?![^()]*\))'` to handle parentheses
-- **Analyser** (`analyse_irish_ingredients.py`): Counts frequencies, normalises synonyms, visualises with Seaborn
-- **ML Analysis** (`Food_market_analysis.ipynb`): TF-IDF vectorization, KMeans clustering, hypothesis testing
+- **src/harvester.py**: Fetches OpenFoodFacts data, filters for Ireland, upserts to Supabase
+- **src/tokenizer.py**: Regex-based ingredient parser handling nested parentheses `r',\s*(?![^()]*\))'`
+- **src/recommender.py**: TF-IDF similarity engine + NOVA/additive analysis for healthier alternatives
+- **src/clustering.py**: K-Means segmentation, PCA visualisation
+- **src/analyser.py**: Nutrient statistics, frequency counts
+- **app.py**: Streamlit dashboard with 4 pages (Trends, Recommender, Clustering, About)
+- **Food_market_analysis.ipynb**: EDA and hypothesis testing notebook
 
-## Key Patterns
-- **Supabase Queries**: Use `.or_("field.ilike.%value1%,field.ilike.%value2%")` for multi-condition filters
-- **Ingredient Tokenization**: Split on commas but skip those inside parentheses using negative lookahead
-- **Normalisation**: Apply synonym mappings (e.g., `{'flavourings': 'flavouring'}`) before counting
-- **Data Cleaning**: Convert nutriments to float, default 0.0 for missing values
-- **Filtering Non-English**: Remove products containing German keywords like 'zucker', 'wasser'
-- **Upsert Logic**: Use Supabase upsert to prevent duplicates on 'code' field
+## Code Patterns
 
-## Dependencies & Environment
-- Python 3.9+ in virtual environment (`venv/`)
-- Load credentials from `.env`: `SUPABASE_URL`, `SUPABASE_KEY`
-- Key packages: pandas, supabase-py, scikit-learn, seaborn, matplotlib, pingouin, yellowbrick
+### Ingredient Tokenization (see src/tokenizer.py)
+```python
+# Split on commas OUTSIDE parentheses only
+INGREDIENT_PATTERN = r',\s*(?![^()]*\))'
+tokens = re.split(INGREDIENT_PATTERN, text)
+```
 
-## Workflows
-- **Data Harvesting**: Run `python harvest_to_db.py` (respects API rate limits with sleeps)
-- **Analysis**: Execute notebook cells sequentially for ML workflows
-- **Visualisation**: Use Seaborn barplots with `rotation=45, ha='right'` for ingredient labels
-- **Stats Testing**: Pingouin t-tests with `correction='auto'` for unequal variances
+### Supabase Queries
+```python
+# Multi-condition OR filters
+.or_("field.ilike.%value1%,field.ilike.%value2%")
+# Upsert to prevent duplicates
+.upsert(data, on_conflict='code')
+```
 
-## Conventions
-- Store plots as PNG with `dpi=300, bbox_inches='tight'`
-- Filter Ireland data: `countries_sold.ilike.%Ireland%` or `en:ie`
-- Handle API pagination: 50 items/page, up to 5 pages per category
-- Skip products without `ingredients_text` or `code`
+### Recommender System (src/recommender.py)
+- **TF-IDF**: `TfidfVectorizer(max_features=100, ngram_range=(1,2))`
+- **Similarity**: Cosine similarity on ingredient vectors
+- **Filtering**: Exclude NOVA 4, high additive count, concerning E-numbers
+- **Scoring**: `processing_score = (nova * 0.4) + (e_count * 0.3) + (additive_score * 0.3)`
+
+### Streamlit Session State
+```python
+# Initialize ONCE in sidebar (not main page)
+if 'data_loaded' not in st.session_state:
+    st.session_state.data_loaded = False
+```
+
+## Build & Test
+```bash
+# Setup
+pip install -r requirements.txt
+cp .env.example .env  # Add SUPABASE_URL, SUPABASE_KEY
+
+# Run dashboard
+streamlit run app.py
+
+# Test suite
+pytest tests/ -v --cov=src --cov-report=term-missing
+
+# Lint
+flake8 src/ tests/ --max-line-length=120
+```
+
+## CI/CD (GitHub Actions)
+- **Triggers**: Push/PR to main/master
+- **Jobs**: Lint (flake8), test (pytest + coverage), security check
+- **Python**: 3.10, cached pip dependencies
+
+## Data Conventions
+- **Missing nutriments**: Default to `0.0` (float)
+- **Ireland filter**: `countries_sold.ilike.%Ireland%` OR `countries_en` contains `en:ie`
+- **Non-English removal**: Filter out products with German keywords (`zucker`, `wasser`)
+- **API pagination**: 50 items/page, max 5 pages per category
+- **Required fields**: Skip products missing `ingredients_text` or `code`
+
+## Visualisation Standards
+- **Exports**: PNG with `dpi=300, bbox_inches='tight'`
+- **Plotly theme**: `template='plotly_white'`
+- **Axis labels**: `rotation=45, ha='right'` for ingredient names
+- **Colors**: Use `px.colors.qualitative.Safe` for accessibility
 <parameter name="filePath">c:\Users\seanq\Desktop\Food_data\.github\copilot-instructions.md
